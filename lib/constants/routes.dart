@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shopmate/pages/home_page.dart';
-import 'package:shopmate/pages/login_page.dart';
-import 'package:shopmate/pages/registration_page.dart';
+import 'package:shopmate/pages/HomeScreen/home_page.dart';
+import 'package:shopmate/pages/AuthenticationScreen/login_page.dart';
+import 'package:shopmate/pages/AuthenticationScreen/registration_page.dart';
 import 'package:shopmate/pages/list_page.dart';
 
 final router = GoRouter(

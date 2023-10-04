@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopmate/pages/home_page.dart';
-import 'package:shopmate/pages/list_page.dart';
+import 'package:shopmate/pages/HomeScreen/home_page.dart';
 
 
-//if user is signed in i display list page
-class AuthenticationPage extends StatelessWidget {
+import 'package:shopmate/pages/list_page.dart';class AuthenticationPage extends StatelessWidget {
   const AuthenticationPage({super.key});
 
   @override
@@ -24,44 +22,39 @@ class AuthenticationPage extends StatelessWidget {
   }
 }
 
-// import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
+// class AuthenticationService {
+//   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+//   static User? user = firebaseAuth.currentUser;
+//   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+//   //registering a user
 
-// class AuthFunction extends StatelessWidget {
-//   const AuthFunction({
-//     required this.loggedIn,
-//     required this.signOut,
-//   });
+//   static Future<String> registerUser(String email, String password) async {
+//     try {
+//       UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(
+//         email: email, 
+//         password: password,
+//         );
 
-//   final bool loggedIn;
-//   final void Function() signOut;
+//       String? uid = userCredential.user!.uid;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       children: [
-//         Padding(
-//           padding: EdgeInsets.all(8),
-//           child: ElevatedButton(
-//             onPressed: (){
-//               !loggedIn ? context.push("/login_page"): signOut();
+//       await FirebaseFireStore.instance.collection("Users").doc(uid).set({
+//         "email": email,
+//       });
 
-//             },
-//              child: !loggedIn ? Text("logIn"): Text("LogOut"),),),
-//         Visibility(
-//           visible: loggedIn,
-//           child: Padding(
-//             padding: EdgeInsets.all(8),
-//             child: ElevatedButton(
-//               onPressed: (){
-//                 context.push("/registration_page");
-//               },
-//                child: Text("registering hahaha"),),
-//             ),),
-//       ],
-//     );
-    
+//       return null;
+//     } on FirebaseAuthException catch (exception) {
+//       return exception.code;
+//     }
 //   }
 
+  //verifying email with ottp
+
+  // static Future<bool> verifyEmailWithOtp (String otpCode) async{
+  //   try{
+  //     User? user = firebaseAuth.currentUser;
+  //     DocumentSnapshot userDoc = await firestore.collection("Users").doc(user!.uid).get();
+  //     String? storedOTP =userDoc.get("otp");
+  //   }
+  // }
 // }

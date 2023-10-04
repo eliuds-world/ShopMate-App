@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shopmate/firebase_options.dart';
-import 'package:shopmate/pages/routes.dart';
+import 'package:shopmate/constants/routes.dart';
 
 final router = createRouter();
 
