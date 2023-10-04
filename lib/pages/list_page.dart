@@ -1,17 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:shopmate/pages/login_page.dart';
+import 'package:go_router/go_router.dart';
 
 class ListPage extends StatelessWidget {
-  const ListPage({super.key});
+  ListPage({super.key});
 
+  final user = FirebaseAuth.instance.currentUser;
   void logUserOut() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-    } catch (e) {
-      print("Error :$e ocuured");
-    }
+    await FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -22,13 +18,15 @@ class ListPage extends StatelessWidget {
           IconButton(
             onPressed: () {
               logUserOut();
+              context.go("/login_page");
             },
             icon: Icon(Icons.logout),
           ),
         ],
       ),
       body: Center(
-        child: Text("this is the list page"),
+        child: Text("this is the list page for ${user?.email ?? 'Guest'}")
+,
       ),
     );
   }

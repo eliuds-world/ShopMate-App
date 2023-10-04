@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,17 +8,6 @@ class RegistrationPage extends StatelessWidget {
   //my textediting controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  void registerUser() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-    );
-  }
-
-  void logout() {
-    FirebaseAuth.instance.signOut();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +52,7 @@ class RegistrationPage extends StatelessWidget {
               ElevatedButtonWidget(
                 text: "Register",
                 onPressed: () {
-                
+                  context.go("/list_page");
                 },
               ),
               SizedBox(

@@ -17,7 +17,7 @@ class ElevatedButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF3487AA), // Background color
+          backgroundColor: Color(0xFF3487AA), 
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.0),
           ),

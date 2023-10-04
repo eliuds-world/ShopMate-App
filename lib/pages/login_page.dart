@@ -4,18 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopmate/widgets/textfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
-// import 'package:go_router/go_router.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   //my textediting controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   void loginUser() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-    );
+    // showDialog(
+    //   context: context, // Use the context from the onPressed callback
+    //   builder: (context) {
+    //     return Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   },
+    // );
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (error) {
+      if (error.code == "user-not-found") {
+        print("No user found with that email");
+      } else if (error.code == "wrong-password") {
+        print("wrong password");
+      }
+    }
   }
 
   @override
@@ -71,6 +94,7 @@ class LoginPage extends StatelessWidget {
               ElevatedButtonWidget(
                 text: "Login",
                 onPressed: () {
+                  loginUser();
                   context.go("/list_page");
                 },
               ),
