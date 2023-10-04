@@ -1,26 +1,26 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:shopmate/pages/HomeScreen/home_page.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+// import 'package:shopmate/pages/HomeScreen/home_page.dart';
 
 
-import 'package:shopmate/pages/list_page.dart';class AuthenticationPage extends StatelessWidget {
-  const AuthenticationPage({super.key});
+// import 'package:shopmate/pages/list_page.dart';class AuthenticationPage extends StatelessWidget {
+//   const AuthenticationPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListPage();
-          } else
-            return HomePage();
-        },
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: StreamBuilder<User?>(
+//         stream: FirebaseAuth.instance.authStateChanges(),
+//         builder: (context, snapshot) {
+//           if (snapshot.hasData) {
+//             return ListPage();
+//           } else
+//             return HomePage();
+//         },
+//       ),
+//     );
+//   }
+// }
 
 // class AuthenticationService {
 //   static FirebaseAuth firebaseAuth = FirebaseAuth.instance;
