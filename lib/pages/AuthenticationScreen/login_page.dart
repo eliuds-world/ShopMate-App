@@ -1,12 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopmate/widgets/textfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -14,32 +14,28 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   //my textediting controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  late final emailController = TextEditingController();
+  late final passwordController = TextEditingController();
+  // Future loginUserIn() async {
+  //   try {
+  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //       email: emailController.text,
+  //       password: passwordController.text,
+  //     );
+  //   } on FirebaseAuthException catch (error) {
+  //     if (error.code == "user-not-found") {
+  //       print("No user found with that email");
+  //     } else if (error.code == "wrong-password") {
+  //       print("wrong password");
+  //     }
+  //   }
+  // }
 
-  
-  Future loginUserIn() async {
-    // showDialog(
-    //   context: context, // Use the context from the onPressed callback
-    //   builder: (context) {
-    //     return Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   },
-    // );
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (error) {
-      if (error.code == "user-not-found") {
-        print("No user found with that email");
-      } else if (error.code == "wrong-password") {
-        print("wrong password");
-      }
-    }
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -96,9 +92,34 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButtonWidget(
                 text: "Login",
                 onPressed: () async {
-                  final loginResult = await loginUserIn();
-                  if (loginResult == loginResult.success) {
+                  try {
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text,
+                    );
                     context.go("/list_page");
+                  } on FirebaseAuthException catch (error) {
+                    if (error.code == "user-not-found") {
+                      await showErrorDialog(
+                        context,
+                        "Enter correct email",
+                      );
+                    } else if (error.code == "wrong-password") {
+                      await showErrorDialog(
+                        context,
+                        "Enter Correct password",
+                      );
+                    } else if (error.code == 'network-request-failed') {
+                      showErrorDialog(context, 'No Internet Connection');
+                    } else if (error.code == 'too-many-requests') {
+                      return showErrorDialog(
+                          context, 'Too many attempts please try later');
+                    } else if (error.code == 'unknown') {
+                      showErrorDialog(
+                          context, 'Email and Password Fields are required');
+                    } else {
+                      print(error.code);
+                    }
                   }
                 },
               ),
@@ -137,4 +158,46 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+// Future<void> showErrorDialog(
+//   BuildContext context,
+//   String text,
+// ) {
+//   return showDialog(
+//     context: context,
+//     builder: (context) {
+//       return AlertDialog(
+//         title: Text("An error occured"),
+//         content: Text(text),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//             child: Text("Ok"),
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
+
+Future<void> showErrorDialog(
+  BuildContext context,
+  String text,
+) async {
+  final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+  scaffoldMessenger.showSnackBar(
+    SnackBar(
+      content: Text(text),
+      action: SnackBarAction(
+        label: 'OK',
+        onPressed: () {
+          scaffoldMessenger.hideCurrentSnackBar();
+        },
+      ),
+    ),
+  );
 }

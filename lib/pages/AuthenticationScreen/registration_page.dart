@@ -4,10 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:shopmate/widgets/textfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
 
-class RegistrationPage extends StatelessWidget {
+class RegistrationPage extends StatefulWidget {
+  @override
+  State<RegistrationPage> createState() => _RegistrationPageState();
+}
+
+class _RegistrationPageState extends State<RegistrationPage> {
   //my textediting controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
