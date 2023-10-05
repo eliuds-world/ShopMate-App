@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shopmate/widgets/textfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shopmate/services/Authentication/show_error_snackbar.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -11,8 +13,8 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   //my textediting controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  late final emailController = TextEditingController();
+  late final passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -64,8 +66,39 @@ class _RegistrationPageState extends State<RegistrationPage> {
               ),
               ElevatedButtonWidget(
                 text: "Register",
-                onPressed: () {
-                  context.go("/list_page");
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text,
+                    );
+                    Navigator.of(context).pushNamed("/verfy_page");
+                    // context.go("/verify_page");
+                  } on FirebaseAuthException catch (error) {
+                    if (error.code == "weak-password") {
+                      await showErrorDialog(
+                        context,
+                        "Provide a strong password",
+                      );
+                    } else if (error.code == "email-already-in-use") {
+                      await showErrorDialog(
+                        context,
+                        "Email is already in use, provide a new email",
+                      );
+                    } else if (error.code == 'network-request-failed') {
+                      await showErrorDialog(context, 'No Internet Connection');
+                    } else if (error.code == 'unknown') {
+                      await showErrorDialog(
+                          context, 'Email and Password Fields are required');
+                    } else {
+                      await showErrorDialog(context, "Error ${error.code}");
+                    }
+                  } catch (error) {
+                    await showErrorDialog(
+                      context,
+                      error.toString(),
+                    );
+                  }
                 },
               ),
               SizedBox(

@@ -16,20 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   //my textediting controllers
   late final emailController = TextEditingController();
   late final passwordController = TextEditingController();
-  // Future loginUserIn() async {
-  //   try {
-  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //       email: emailController.text,
-  //       password: passwordController.text,
-  //     );
-  //   } on FirebaseAuthException catch (error) {
-  //     if (error.code == "user-not-found") {
-  //       print("No user found with that email");
-  //     } else if (error.code == "wrong-password") {
-  //       print("wrong password");
-  //     }
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -120,6 +106,11 @@ class _LoginPageState extends State<LoginPage> {
                     } else {
                       print(error.code);
                     }
+                  } catch (error) {
+                    await showErrorDialog(
+                      context,
+                      error.toString(),
+                    );
                   }
                 },
               ),
