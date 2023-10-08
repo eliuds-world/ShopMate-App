@@ -1,45 +1,26 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shopmate/widgets/textfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shopmate/services/Authentication/show_error_snackbar.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
-
+class RegistrationPage extends StatefulWidget {
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegistrationPageState extends State<RegistrationPage> {
   //my textediting controllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  late final emailController = TextEditingController();
+  late final passwordController = TextEditingController();
 
-  
-  Future loginUserIn() async {
-    // showDialog(
-    //   context: context, // Use the context from the onPressed callback
-    //   builder: (context) {
-    //     return Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   },
-    // );
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (error) {
-      if (error.code == "user-not-found") {
-        print("No user found with that email");
-      } else if (error.code == "wrong-password") {
-        print("wrong password");
-      }
-    }
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 60.0,
               ),
               Text(
-                "Login",
+                "Registration",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -81,24 +62,43 @@ class _LoginPageState extends State<LoginPage> {
                 icon: Icons.password,
               ),
               SizedBox(
-                height: 30.0,
-              ),
-              Text(
-                "Forgot your password ?",
-                style: TextStyle(
-                  color: Color(0xFF3487AA),
-                  fontSize: 16,
-                ),
-              ),
-              SizedBox(
                 height: 350,
               ),
               ElevatedButtonWidget(
-                text: "Login",
+                text: "Register",
                 onPressed: () async {
-                  final loginResult = await loginUserIn();
-                  if (loginResult == loginResult.success) {
-                    context.go("/list_page");
+                  try {
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text,
+                    );
+                    final user = FirebaseAuth.instance.currentUser;
+                    await user?.sendEmailVerification();
+                    context.go("/verify_page");
+                  } on FirebaseAuthException catch (error) {
+                    if (error.code == "weak-password") {
+                      await showErrorDialog(
+                        context,
+                        "Provide a strong password",
+                      );
+                    } else if (error.code == "email-already-in-use") {
+                      await showErrorDialog(
+                        context,
+                        "Email is already in use, provide a new email",
+                      );
+                    } else if (error.code == 'invalid-email') {
+                      await showErrorDialog(context, 'Invalid-email');
+                    } else if (error.code == 'unknown') {
+                      await showErrorDialog(
+                          context, 'Email and Password Fields are required');
+                    } else {
+                      await showErrorDialog(context, "Error ${error.code}");
+                    }
+                  } catch (error) {
+                    await showErrorDialog(
+                      context,
+                      error.toString(),
+                    );
                   }
                 },
               ),
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Don't have an account ? ",
+                      text: 'Already have an account ? ',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     TextSpan(
-                      text: 'Register',
+                      text: 'Log in',
                       style: TextStyle(
                         color: Color(0xFF3487AA),
                         fontSize: 16,
@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          context.go("/registration_page");
+                          context.go("/login_page");
                         },
                     ),
                   ],
