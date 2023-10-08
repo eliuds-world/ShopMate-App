@@ -14,6 +14,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     return Scaffold(
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
                 "We have send you an email verification link  to your email adrress"),

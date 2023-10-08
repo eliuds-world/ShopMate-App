@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shopmate/widgets/textfield_widget.dart';
+import 'package:shopmate/widgets/textformfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopmate/services/Authentication/show_error_snackbar.dart';
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 150.0,
               ),
-              TextFieldWidget(
+              TextFormFieldWidget(
                 controller: emailController,
                 hintText: "email",
                 obscureText: false,
@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 40.0,
               ),
-              TextFieldWidget(
+              TextFormFieldWidget(
                 controller: passwordController,
                 hintText: "password",
                 obscureText: true,
