@@ -21,6 +21,8 @@ dependencies:
   provider: ^6.0.5
   firebase_ui_auth: ^1.8.0
   get: ^4.6.6
+  cloud_firestore: ^4.9.3
+
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +33,7 @@ dev_dependencies:
 
 flutter:
   assets:
-   - assets/homepage.jpeg
+   - assets/welcomepage.jpeg
 
 
   uses-material-design: true

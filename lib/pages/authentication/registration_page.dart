@@ -1,4 +1,5 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -17,16 +18,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final formKey = GlobalKey<FormState>();
   late final emailController = TextEditingController();
   late final passwordController = TextEditingController();
+  late final fullNameController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    fullNameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -37,7 +42,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 60.0,
+                  height: screenHeight * 0.07,
                 ),
                 Text(
                   "Registration",
@@ -48,7 +53,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 150.0,
+                  height: screenHeight * 0.15,
+                ),
+                TextFormFieldWidget(
+                    controller: fullNameController,
+                    hintText: "full Name",
+                    obscureText: false),
+                SizedBox(
+                  height: screenHeight * 0.04,
                 ),
                 TextFormFieldWidget(
                   controller: emailController,
@@ -70,7 +82,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   },
                 ),
                 SizedBox(
-                  height: 40.0,
+                  height: screenHeight * 0.04,
                 ),
                 TextFormFieldWidget(
                   controller: passwordController,
@@ -79,53 +91,59 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   icon: Icons.password,
                 ),
                 SizedBox(
-                  height: 350,
+                  height: screenHeight * 0.45,
                 ),
                 ElevatedButtonWidget(
-                    text: "Register",
-                    onPressed: () async{
-                      try {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text,
-                        );
-                        final user = FirebaseAuth.instance.currentUser;
-                        await user?.sendEmailVerification();
-                        context.go("/verify_page");
-                      } on FirebaseAuthException catch (error) {
-                        if (error.code == "weak-password") {
-                          await showErrorDialog(
-                            context,
-                            "Provide a strong password",
-                          );
-                        } else if (error.code == "email-already-in-use") {
-                          await showErrorDialog(
-                            context,
-                            "Email is already in use, provide a new email",
-                          );
-                        } else if (error.code == 'invalid-email') {
-                          await showErrorDialog(context, 'Invalid-email');
-                        } else if (error.code == 'unknown') {
-                          await showErrorDialog(
-                              context, 'Email and Password Fields are required');
-                        } else {
-                          await showErrorDialog(context, "Error ${error.code}");
-                        }
-                      } catch (error) {
+                  text: "Register",
+                  onPressed: () async {
+                    try {
+                      await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
+
+                      final user = FirebaseAuth.instance.currentUser;
+                      await user?.sendEmailVerification();
+                      context.go("/verify_page");
+                      //adding user details to firstore collection
+                      addUserCollectionDetails(
+                        fullNameController.text,
+                        emailController.text,
+                      );
+                    } on FirebaseAuthException catch (error) {
+                      if (error.code == "weak-password") {
                         await showErrorDialog(
                           context,
-                          error.toString(),
+                          "Provide a strong password",
                         );
+                      } else if (error.code == "email-already-in-use") {
+                        await showErrorDialog(
+                          context,
+                          "Email is already in use, provide a new email",
+                        );
+                      } else if (error.code == 'invalid-email') {
+                        await showErrorDialog(context, 'Invalid-email');
+                      } else if (error.code == 'unknown') {
+                        await showErrorDialog(
+                            context, 'Email and Password Fields are required');
+                      } else {
+                        await showErrorDialog(context, "Error ${error.code}");
+                      }
+                    } catch (error) {
+                      await showErrorDialog(
+                        context,
+                        error.toString(),
+                      );
 
                       if (formKey.currentState!.validate()) {
                         print("${emailController.text}");
                       }
                     }
-                    },
-                    ),
+                  },
+                ),
                 SizedBox(
-                  height: 15,
+                  height: screenHeight * 0.015,
                 ),
                 RichText(
                   text: TextSpan(
@@ -160,4 +178,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
   }
+}
+
+Future addUserCollectionDetails(String fullName, String email) async {
+  await FirebaseFirestore.instance.collection("users").add(
+    {
+      "full name": fullName,
+      "email": email,
+    }, 
+  );
 }

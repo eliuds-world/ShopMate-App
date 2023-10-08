@@ -27,6 +27,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -35,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 60.0,
+                height: screenHeight * 0.07,
               ),
               Text(
                 "Login",
@@ -46,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(
-                height: 150.0,
+                height: screenHeight *0.15
               ),
               TextFormFieldWidget(
                 controller: emailController,
@@ -55,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 icon: Icons.email,
               ),
               SizedBox(
-                height: 40.0,
+                height: screenHeight *0.04,
               ),
               TextFormFieldWidget(
                 controller: passwordController,
@@ -64,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                 icon: Icons.password,
               ),
               SizedBox(
-                height: 30.0,
+                height: screenHeight *0.03,
               ),
               Text(
                 "Forgot your password ?",
@@ -74,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(
-                height: 350,
+                height: screenHeight *0.40,
               ),
               ElevatedButtonWidget(
                 text: "Login",
@@ -123,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               SizedBox(
-                height: 15,
+                height: screenHeight *0.015,
               ),
               RichText(
                 text: TextSpan(
@@ -159,44 +161,5 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-// Future<void> showErrorDialog(
-//   BuildContext context,
-//   String text,
-// ) {
-//   return showDialog(
-//     context: context,
-//     builder: (context) {
-//       return AlertDialog(
-//         title: Text("An error occured"),
-//         content: Text(text),
-//         actions: [
-//           TextButton(
-//             onPressed: () {
-//               Navigator.of(context).pop();
-//             },
-//             child: Text("Ok"),
-//           ),
-//         ],
-//       );
-//     },
-//   );
-// }
 
-// Future<void> showErrorDialog(
-//   BuildContext context,
-//   String text,
-// ) async {
-//   final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-//   scaffoldMessenger.showSnackBar(
-//     SnackBar(
-//       content: Text(text),
-//       action: SnackBarAction(
-//         label: 'OK',
-//         onPressed: () {
-//           scaffoldMessenger.hideCurrentSnackBar();
-//         },
-//       ),
-//     ),
-//   );
-// }

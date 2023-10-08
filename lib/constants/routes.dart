@@ -9,7 +9,7 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: "/",
-      builder: (context, state) => HomePage(),
+      builder: (context, state) => WelcomePage(),
     ),
     GoRoute(
       path: "/registration_page",
