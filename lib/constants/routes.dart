@@ -1,8 +1,8 @@
 import 'package:go_router/go_router.dart';
-import 'package:shopmate/pages/Screens/home_page.dart';
-import 'package:shopmate/pages/AuthenticationScreen/login_page.dart';
-import 'package:shopmate/pages/AuthenticationScreen/registration_page.dart';
-import 'package:shopmate/pages/Screens/list_page.dart';
+import 'package:shopmate/pages/authentication/welcome_page.dart';
+import 'package:shopmate/pages/authentication/login_page.dart';
+import 'package:shopmate/pages/authentication/registration_page.dart';
+import 'package:shopmate/pages/dashboard/list_page.dart';
 import 'package:shopmate/services/Authentication/verify_email.dart';
 
 final router = GoRouter(

@@ -1,17 +1,19 @@
-import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shopmate/widgets/textfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopmate/services/Authentication/show_error_snackbar.dart';
 
-class RegistrationPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
-  State<RegistrationPage> createState() => _RegistrationPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegistrationPageState extends State<RegistrationPage> {
+class _LoginPageState extends State<LoginPage> {
   //my textediting controllers
   late final emailController = TextEditingController();
   late final passwordController = TextEditingController();
@@ -36,7 +38,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 height: 60.0,
               ),
               Text(
-                "Registration",
+                "Login",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -62,36 +64,55 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 icon: Icons.password,
               ),
               SizedBox(
+                height: 30.0,
+              ),
+              Text(
+                "Forgot your password ?",
+                style: TextStyle(
+                  color: Color(0xFF3487AA),
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(
                 height: 350,
               ),
               ElevatedButtonWidget(
-                text: "Register",
+                text: "Login",
                 onPressed: () async {
                   try {
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
                       email: emailController.text,
                       password: passwordController.text,
                     );
-                    Navigator.of(context).pushNamed("/verfy_page");
-                    // context.go("/verify_page");
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user?.emailVerified ?? false) {
+                      //user verified
+                      context.go("/list_page");
+                    } else {
+                      //user email not verified
+                      context.go("/verify_page");
+                    }
                   } on FirebaseAuthException catch (error) {
-                    if (error.code == "weak-password") {
+                    if (error.code == "user-not-found") {
                       await showErrorDialog(
                         context,
-                        "Provide a strong password",
+                        "Enter correct email",
                       );
-                    } else if (error.code == "email-already-in-use") {
+                    } else if (error.code == "wrong-password") {
                       await showErrorDialog(
                         context,
-                        "Email is already in use, provide a new email",
+                        "Enter Correct password",
                       );
                     } else if (error.code == 'network-request-failed') {
-                      await showErrorDialog(context, 'No Internet Connection');
+                      showErrorDialog(context, 'No Internet Connection');
+                    } else if (error.code == 'too-many-requests') {
+                      return showErrorDialog(
+                          context, 'Too many attempts please try later');
                     } else if (error.code == 'unknown') {
-                      await showErrorDialog(
+                      showErrorDialog(
                           context, 'Email and Password Fields are required');
                     } else {
-                      await showErrorDialog(context, "Error ${error.code}");
+                      print(error.code);
                     }
                   } catch (error) {
                     await showErrorDialog(
@@ -108,7 +129,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Already have an account ? ',
+                      text: "Don't have an account ? ",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -116,7 +137,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                     ),
                     TextSpan(
-                      text: 'Log in',
+                      text: 'Register',
                       style: TextStyle(
                         color: Color(0xFF3487AA),
                         fontSize: 16,
@@ -124,7 +145,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          context.go("/login_page");
+                          context.go("/registration_page");
                         },
                     ),
                   ],
@@ -137,3 +158,45 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 }
+
+// Future<void> showErrorDialog(
+//   BuildContext context,
+//   String text,
+// ) {
+//   return showDialog(
+//     context: context,
+//     builder: (context) {
+//       return AlertDialog(
+//         title: Text("An error occured"),
+//         content: Text(text),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//             child: Text("Ok"),
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
+
+// Future<void> showErrorDialog(
+//   BuildContext context,
+//   String text,
+// ) async {
+//   final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+//   scaffoldMessenger.showSnackBar(
+//     SnackBar(
+//       content: Text(text),
+//       action: SnackBarAction(
+//         label: 'OK',
+//         onPressed: () {
+//           scaffoldMessenger.hideCurrentSnackBar();
+//         },
+//       ),
+//     ),
+//   );
+// }
