@@ -3,7 +3,7 @@ import 'package:shopmate/pages/authentication/welcome_page.dart';
 import 'package:shopmate/pages/authentication/login_page.dart';
 import 'package:shopmate/pages/authentication/registration_page.dart';
 import 'package:shopmate/pages/dashboard/list_page.dart';
-import 'package:shopmate/services/Authentication/verify_email.dart';
+// import 'package:shopmate/services/Authentication/verify_email.dart';
 
 final router = GoRouter(
   routes: [
@@ -23,10 +23,10 @@ final router = GoRouter(
       path: "/list_page",
       builder: (context, state) => ListPage(),
     ),
-    GoRoute(
-      path: "/verify_page",
-      builder: (context, state) => VerifyEmail(),
-    ),
+    // GoRoute(
+    //   path: "/verify_page",
+    //   builder: (context, state) => VerifyEmail(),
+    // ),
   ],
 );
 

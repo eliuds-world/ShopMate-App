@@ -16,7 +16,7 @@ class AuthService implements AuthProvider {
     required String email,
     required String password,
   }) =>
-      provider.createUser(
+      provider.createUser(  
         email: email,
         password: password,
       );

@@ -1,9 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shopmate/services/Authentication/auth_exceptions.dart';
+import 'package:shopmate/services/Authentication/auth_service.dart';
 import 'package:shopmate/widgets/textformfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopmate/services/Authentication/show_error_snackbar.dart';
 
 class LoginPage extends StatefulWidget {
@@ -82,39 +83,32 @@ class _LoginPageState extends State<LoginPage> {
                 text: "Login",
                 onPressed: () async {
                   try {
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    await AuthService.firebase().logIn(
                       email: emailController.text,
                       password: passwordController.text,
                     );
-                    final user = FirebaseAuth.instance.currentUser;
-                    if (user?.emailVerified ?? false) {
-                      //user verified
-                      context.go("/list_page");
-                    } else {
-                      //user email not verified
-                      context.go("/verify_page");
-                    }
-                  } on FirebaseAuthException catch (error) {
-                    if (error.code == "user-not-found") {
-                      await showErrorDialog(
+                    // final user = FirebaseAuth.instance.currentUser;
+                    // if (user?.emailVerified ?? false) {
+                    //   //user verified
+                    //   context.go("/list_page");
+                    // } else {
+                    //   //user email not verified
+                    //   context.go("/verify_page");
+                    // }
+                  } on UserNotFoundAuthException{
+                    await showErrorDialog(
                         context,
                         "Enter correct email",
                       );
-                    } else if (error.code == "wrong-password") {
-                      await showErrorDialog(
+                  }on  WrongPasswordAuthException{
+                    await showErrorDialog(
                         context,
                         "Enter Correct password",
                       );
-                    } else if (error.code == 'unknown') {
-                      showErrorDialog(
-                          context, 'Email and Password Fields are required');
-                    } else {
-                      print(error.code);
-                    }
-                  } catch (error) {
-                    await showErrorDialog(
+                  }on GenericAuthException{
+                     await showErrorDialog(
                       context,
-                      error.toString(),
+                      "Authentication error",
                     );
                   }
                 },

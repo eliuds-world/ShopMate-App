@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shopmate/services/Authentication/auth_exceptions.dart';
+import 'package:shopmate/services/Authentication/auth_service.dart';
 import 'package:shopmate/widgets/textformfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopmate/services/Authentication/show_error_snackbar.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -97,43 +98,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   text: "Register",
                   onPressed: () async {
                     try {
-                      await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
+                      await AuthService.firebase().createUser(
                         email: emailController.text,
                         password: passwordController.text,
                       );
 
-                      final user = FirebaseAuth.instance.currentUser;
-                      await user?.sendEmailVerification();
-                      context.go("/verify_page");
                       //adding user details to firstore collection
                       addUserCollectionDetails(
                         fullNameController.text,
                         emailController.text,
                       );
-                    } on FirebaseAuthException catch (error) {
-                      if (error.code == "weak-password") {
-                        await showErrorDialog(
-                          context,
-                          "Provide a strong password",
-                        );
-                      } else if (error.code == "email-already-in-use") {
-                        await showErrorDialog(
-                          context,
-                          "Email is already in use, provide a new email",
-                        );
-                      } else if (error.code == 'invalid-email') {
-                        await showErrorDialog(context, 'Invalid-email');
-                      } 
-                       else {
-                        await showErrorDialog(context, "Error ${error.code}");
-                      }
-                    } catch (error) {
+                    } on WeakPasswordAuthExceptions {
                       await showErrorDialog(
                         context,
-                        error.toString(),
+                        "Provide a strong password",
                       );
-
+                    } on EmailAlreadyInUseAuthException {
+                      await showErrorDialog(
+                        context,
+                        "Email is already in use, provide a new email",
+                      );
+                    } on InvalidEmailAuthException {
+                      await showErrorDialog(context, 'Invalid-email');
+                    } on GenericAuthException {
+                      await showErrorDialog(
+                        context,
+                        "Authentication error",
+                      );
                       if (formKey.currentState!.validate()) {
                         print("${emailController.text}");
                       }
@@ -183,6 +174,6 @@ Future addUserCollectionDetails(String fullName, String email) async {
     {
       "full name": fullName,
       "email": email,
-    }, 
+    },
   );
 }
