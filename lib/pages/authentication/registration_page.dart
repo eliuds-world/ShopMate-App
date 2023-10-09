@@ -68,7 +68,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   obscureText: false,
                   icon: Icons.email,
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value == null || value.isEmpty) {
                       return "Enter Email";
                     } else {
                       return null;
@@ -91,7 +91,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   icon: Icons.password,
                 ),
                 SizedBox(
-                  height: screenHeight * 0.45,
+                  height: screenHeight * 0.35,
                 ),
                 ElevatedButtonWidget(
                   text: "Register",
@@ -124,10 +124,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         );
                       } else if (error.code == 'invalid-email') {
                         await showErrorDialog(context, 'Invalid-email');
-                      } else if (error.code == 'unknown') {
-                        await showErrorDialog(
-                            context, 'Email and Password Fields are required');
-                      } else {
+                      } 
+                       else {
                         await showErrorDialog(context, "Error ${error.code}");
                       }
                     } catch (error) {

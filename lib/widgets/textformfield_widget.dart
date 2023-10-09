@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class TextFormFieldWidget extends StatefulWidget {
+class TextFormFieldWidget extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
   final IconData? icon;
   final textInputType;
-  final String? Function(String)? validator;
+  final String? Function(String?)? validator;
 
   const TextFormFieldWidget({
     required this.controller,
@@ -18,13 +18,18 @@ class TextFormFieldWidget extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<TextFormFieldWidget> createState() => _TextFormFieldWidgetState();
-}
+  // String? defaultValidator(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return "this field is required";
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
-class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
   @override
   Widget build(BuildContext context) {
+    // final customValidator = validator ?? defaultValidator;
+
     return Container(
       width: 300,
       height: 50,
@@ -38,12 +43,12 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: TextFormField(
-                validator: widget.validator,
-                controller: widget.controller,
-                obscureText: widget.obscureText,
+                validator: validator,
+                controller: controller,
+                obscureText: obscureText,
                 style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
-                  hintText: widget.hintText,
+                  hintText: hintText,
                   hintStyle: TextStyle(color: Color(0xFF848484)),
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -55,7 +60,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
             child: Icon(
-              widget.icon,
+              icon,
               color: Color(0xFF848484),
             ),
           ),

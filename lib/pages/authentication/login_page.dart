@@ -105,11 +105,6 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         "Enter Correct password",
                       );
-                    } else if (error.code == 'network-request-failed') {
-                      showErrorDialog(context, 'No Internet Connection');
-                    } else if (error.code == 'too-many-requests') {
-                      return showErrorDialog(
-                          context, 'Too many attempts please try later');
                     } else if (error.code == 'unknown') {
                       showErrorDialog(
                           context, 'Email and Password Fields are required');
