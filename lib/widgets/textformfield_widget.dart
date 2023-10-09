@@ -38,7 +38,7 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: TextFormField(
-                // validator: widget.validator,
+                validator: widget.validator,
                 controller: widget.controller,
                 obscureText: widget.obscureText,
                 style: TextStyle(color: Colors.black),
