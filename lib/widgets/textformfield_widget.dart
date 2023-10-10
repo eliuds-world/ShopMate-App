@@ -18,18 +18,17 @@ class TextFormFieldWidget extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  // String? defaultValidator(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return "this field is required";
-  //   } else {
-  //     return null;
-  //   }
-  // }
+  String? defaultValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "this field is required";
+    } else {
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final customValidator = validator ?? defaultValidator;
-
+    final customValidator = validator ?? defaultValidator;
     return Container(
       width: 300,
       height: 50,
@@ -43,7 +42,7 @@ class TextFormFieldWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: TextFormField(
-                validator: validator,
+                validator: customValidator,
                 controller: controller,
                 obscureText: obscureText,
                 style: TextStyle(color: Colors.black),
@@ -52,7 +51,7 @@ class TextFormFieldWidget extends StatelessWidget {
                   hintStyle: TextStyle(color: Color(0xFF848484)),
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
-                  border: OutlineInputBorder(),
+                  // border: OutlineInputBorder(),
                 ),
               ),
             ),

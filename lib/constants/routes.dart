@@ -3,7 +3,6 @@ import 'package:shopmate/pages/authentication/welcome_page.dart';
 import 'package:shopmate/pages/authentication/login_page.dart';
 import 'package:shopmate/pages/authentication/registration_page.dart';
 import 'package:shopmate/pages/dashboard/list_page.dart';
-// import 'package:shopmate/services/Authentication/verify_email.dart';
 
 final router = GoRouter(
   routes: [

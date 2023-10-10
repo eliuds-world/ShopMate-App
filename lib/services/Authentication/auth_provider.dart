@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:ffi'; 
 import 'package:shopmate/services/Authentication/auth_user.dart';
 
 abstract class AuthProvider {
@@ -13,5 +13,5 @@ abstract class AuthProvider {
     required String password,
   });
   Future<Void> logOut();
-  // Future<void> sendEmailVerification();
+  
 }

@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shopmate/services/adduser_collections.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +6,6 @@ import 'package:shopmate/services/Authentication/auth_exceptions.dart';
 import 'package:shopmate/services/Authentication/auth_service.dart';
 import 'package:shopmate/widgets/textformfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopmate/services/Authentication/show_error_snackbar.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -15,7 +14,6 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  //my textediting controllers
   final formKey = GlobalKey<FormState>();
   late final emailController = TextEditingController();
   late final passwordController = TextEditingController();
@@ -57,9 +55,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   height: screenHeight * 0.15,
                 ),
                 TextFormFieldWidget(
-                    controller: fullNameController,
-                    hintText: "full Name",
-                    obscureText: false),
+                  controller: fullNameController,
+                  hintText: "full Name",
+                  obscureText: false,
+                  icon: Icons.person,
+                ),
                 SizedBox(
                   height: screenHeight * 0.04,
                 ),
@@ -68,19 +68,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   hintText: "email",
                   obscureText: false,
                   icon: Icons.email,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter Email";
-                    } else {
-                      return null;
-                    }
-                    // bool emailIsValid =
-                    //     RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
-                    //         .hasMatch(value);
-                    // if (!emailIsValid) {
-                    //   return "Enter Valid email";
-                    // }
-                  },
                 ),
                 SizedBox(
                   height: screenHeight * 0.04,
@@ -102,17 +89,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         email: emailController.text,
                         password: passwordController.text,
                       );
-
                       //adding user details to firstore collection
                       addUserCollectionDetails(
                         fullNameController.text,
                         emailController.text,
                       );
+                      formKey.currentState!.validate();
+                      context.go("/login_page");
                     } on WeakPasswordAuthExceptions {
                       await showErrorDialog(
                         context,
                         "Provide a strong password",
                       );
+                    } on UserNotLoggedInAuthException {
+                      await showErrorDialog(context, "User is not logged in");
                     } on EmailAlreadyInUseAuthException {
                       await showErrorDialog(
                         context,
@@ -125,9 +115,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         context,
                         "Authentication error",
                       );
-                      if (formKey.currentState!.validate()) {
-                        print("${emailController.text}");
-                      }
                     }
                   },
                 ),
@@ -169,11 +156,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 }
 
-Future addUserCollectionDetails(String fullName, String email) async {
-  await FirebaseFirestore.instance.collection("users").add(
-    {
-      "full name": fullName,
-      "email": email,
-    },
-  );
-}
+// Future addUserCollectionDetails(String fullName, String email) async {
+//   await FirebaseFirestore.instance.collection("users").add(
+//     {
+//       "full name": fullName,
+//       "email": email,
+//     },
+//   );
+// }
