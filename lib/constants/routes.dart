@@ -22,10 +22,7 @@ final router = GoRouter(
       path: "/list_page",
       builder: (context, state) => ListPage(),
     ),
-    // GoRoute(
-    //   path: "/verify_page",
-    //   builder: (context, state) => VerifyEmail(),
-    // ),
+    
   ],
 );
 

@@ -1,39 +1,42 @@
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
+import 'package:shopmate/widgets/elevated_button_widget.dart';
 
-// class ListPage extends StatelessWidget {
-//   ListPage({super.key});
+class ListPage extends StatefulWidget {
+  const ListPage({Key? key});
 
-//   final user = FirebaseAuth.instance.currentUser;
-//   void logUserOut() async {
-//     await FirebaseAuth.instance.signOut();
-//   }
+  @override
+  State<ListPage> createState() => _ListPageState();
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         actions: [
-//           IconButton(
-//             onPressed: () {
-//               logUserOut();
-//               context.go("/login_page");
-//             },
-//             icon: Icon(Icons.logout),
-//           ),
-//         ],
-//       ),
-//       body: Center(
-//         child: Text("this is the list page for ${user?.email ?? 'Guest'}")
-// ,
-//       ),
-//     );
-//   }
-// }
-
-class ListPage extends StatelessWidget {
-  const ListPage({super.key});
+class _ListPageState extends State<ListPage> {
+  List<String> itemList = ["List 1", "List 2", "List 3"];
+  void addNewList() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String newItemList = "";
+        return AlertDialog(
+          title: Text("Create New Itemlist"),
+          content: TextField(
+            onChanged: (value) {
+              newItemList = value;
+            },
+          ),
+          actions: <Widget>[
+            ElevatedButtonWidget(
+              text: "Save",
+              onPressed: () {
+                setState(() {
+                  itemList.add(newItemList);
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,45 +44,76 @@ class ListPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: screenHeight * 0.07,
+      body: Column(
+        children: [
+          SizedBox(
+            height: screenHeight * 0.07,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.notifications_rounded),
+                iconSize: 30,
+              ),
+              Text(
+                "Shopping list",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.menu),
+                iconSize: 40,
+              )
+            ],
+          ),
+
+          // Your list of items
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: itemList.length,
+              itemBuilder: (context, index) {
+                final item = itemList[index];
+                return   ListTile(
+                    // visualDensity: VisualDensity.compact,
+                    title: Text(
+                      item,
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                    subtitle: Text("items"),
+                  );
+              },
             ),
-            Row(
+          ),
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.notification_add_rounded),
-                ),
-                Text(
-                  "Shopping list",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  icon: Icon(Icons.home),
+                  iconSize: 40,
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.more_vert),
+                  onPressed: () {
+                    addNewList();
+                  },
+                  icon: Icon(Icons.add_circle),
+                  iconSize: 60,
                 )
+                // Where the home and addition icons will be placed at the very bottom.
               ],
             ),
-            Column(
-              //the actuall list will be displayed
-            ),
-            Row(
-              children: [
-                //where the home and additiong icons will e placed at the very bottom.
-              ],
-            )
-
-
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

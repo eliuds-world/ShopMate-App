@@ -52,6 +52,12 @@ class TextFormFieldWidget extends StatelessWidget {
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   // border: OutlineInputBorder(),
+                  errorBorder: OutlineInputBorder(
+                    borderSide:BorderSide(
+                      color: Colors.red,
+                      width: 1.0,
+                      
+                    ) ),
                 ),
               ),
             ),

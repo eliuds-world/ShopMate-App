@@ -27,6 +27,42 @@ class _RegistrationPageState extends State<RegistrationPage> {
     super.dispose();
   }
 
+  Future<void> registerUser() async {
+    try {
+      await AuthService.firebase().createUser(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      //adding user details to firstore collection
+      addUserCollectionDetails(
+        fullNameController.text,
+        emailController.text,
+      );
+      context.go("/list_page");
+    } on WeakPasswordAuthExceptions {
+      await showErrorDialog(
+        context,
+        "Provide a strong password",
+      );
+    } on UserNotLoggedInAuthException {
+      await showErrorDialog(context, "User is not logged in");
+    } on EmailAlreadyInUseAuthException {
+      await showErrorDialog(
+        context,
+        "Email is already in use, provide a new email",
+      );
+    } on InvalidEmailAuthException {
+      await showErrorDialog(context, 'Invalid-email');
+    } on GenericAuthException {
+      await showErrorDialog(
+        context,
+        "Authentication error",
+      );
+    }
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -84,37 +120,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ElevatedButtonWidget(
                   text: "Register",
                   onPressed: () async {
-                    try {
-                      await AuthService.firebase().createUser(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
-                      //adding user details to firstore collection
-                      addUserCollectionDetails(
-                        fullNameController.text,
-                        emailController.text,
-                      );
-                      formKey.currentState!.validate();
-                      context.go("/login_page");
-                    } on WeakPasswordAuthExceptions {
-                      await showErrorDialog(
-                        context,
-                        "Provide a strong password",
-                      );
-                    } on UserNotLoggedInAuthException {
-                      await showErrorDialog(context, "User is not logged in");
-                    } on EmailAlreadyInUseAuthException {
-                      await showErrorDialog(
-                        context,
-                        "Email is already in use, provide a new email",
-                      );
-                    } on InvalidEmailAuthException {
-                      await showErrorDialog(context, 'Invalid-email');
-                    } on GenericAuthException {
-                      await showErrorDialog(
-                        context,
-                        "Authentication error",
-                      );
+                    if (formKey.currentState!.validate()) {
+                      registerUser();
                     }
                   },
                 ),

@@ -1,14 +1,14 @@
 import 'dart:ffi'; 
-import 'package:shopmate/services/Authentication/auth_user.dart';
+import 'package:shopmate/models/authentication/auth_user_model.dart';
 
 abstract class AuthProvider {
   Future<void> initialize();
-  AuthUser? get currentUser;
-  Future<AuthUser> logIn({
+  AuthUserModel? get currentUser;
+  Future<AuthUserModel> logIn({
     required String email,
     required String password,
   });
-  Future<AuthUser> createUser({
+  Future<AuthUserModel> createUser({
     required String email,
     required String password,
   });

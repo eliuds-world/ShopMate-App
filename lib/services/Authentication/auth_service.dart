@@ -1,35 +1,33 @@
 import 'dart:ffi';
-import 'package:shopmate/services/Authentication/auth_provider.dart';
-import 'package:shopmate/services/Authentication/auth_user.dart';
-import 'package:shopmate/services/Authentication/firebase_auth_providers.dart';
+import 'package:shopmate/providers/authentication/auth_provider.dart';
+import 'package:shopmate/models/authentication/auth_user_model.dart';
+import 'package:shopmate/providers/authentication/firebase_auth_providers.dart';
 
 class AuthService implements AuthProvider {
   final AuthProvider provider;
   const AuthService(this.provider);
 
   factory AuthService.firebase() => AuthService(
-      FirebaseAuthProvider(),
-      );
+    FirebaseAuthProvider(),
+  );
 
   @override
-  Future<AuthUser> createUser({
+  Future<AuthUserModel> createUser({
     required String email,
     required String password,
-  }) =>
-      provider.createUser(  
+  }) => provider.createUser(  
         email: email,
         password: password,
       );
 
   @override
-  AuthUser? get currentUser => provider.currentUser;
+  AuthUserModel? get currentUser => provider.currentUser;
 
   @override
-  Future<AuthUser> logIn({
+  Future<AuthUserModel> logIn({
     required String email,
     required String password,
-  }) =>
-      provider.logIn(
+  }) => provider.logIn(
         email: email,
         password: password,
       );

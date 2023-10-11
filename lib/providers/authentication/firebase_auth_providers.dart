@@ -5,13 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shopmate/firebase_options.dart';
-import 'package:shopmate/services/Authentication/auth_provider.dart';
-import 'package:shopmate/services/Authentication/auth_user.dart';
+import 'package:shopmate/providers/authentication/auth_provider.dart';
+import 'package:shopmate/models/authentication/auth_user_model.dart';
 import 'package:shopmate/services/Authentication/auth_exceptions.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
-  Future<AuthUser> createUser({
+  Future<AuthUserModel> createUser({
     required String email,
     required String password,
   }) async {
@@ -42,17 +42,17 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  AuthUser? get currentUser {
+  AuthUserModel? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      return AuthUser.fromFirebase(user);
+      return AuthUserModel.fromFirebase(user);
     } else {
       return null;
     }
   }
 
   @override
-  Future<AuthUser> logIn({
+  Future<AuthUserModel> logIn({
     required String email,
     required String password,
   }) async {
