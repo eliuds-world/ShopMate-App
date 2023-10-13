@@ -3,13 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:shopmate/services/Authentication/auth_exceptions.dart';
+import 'package:shopmate/services/authentication/auth_exceptions.dart';
 
 class ListsService {
   Database? _db;
   List<DatabaseList> myList = [];
 
   final listStreamController = StreamController<List<DatabaseList>>.broadcast();
+
+  //this is  a private initialiser to this class coz we are making a singleton
+  static final ListsService _shared = ListsService._sharedInstance();
+  ListsService._sharedInstance();
+  factory ListsService() => _shared;
+
+  //this is our getter for getting allnotes
+  Stream<List<DatabaseList>> get allLists => listStreamController.stream;
 
   Future<DatabaseUser> getOrCreateUser({required String email}) async {
     try {
@@ -31,6 +39,7 @@ class ListsService {
 
   Future<DatabaseList> updateList(
       {required DatabaseList list, required String text}) async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     //make sure that the note actuallt exists
     await getList(id: list.id);
@@ -52,6 +61,7 @@ class ListsService {
   }
 
   Future<Iterable<DatabaseList>> getAllList() async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final lists = await db.query(
       listTable,
@@ -61,6 +71,7 @@ class ListsService {
   }
 
   Future<DatabaseList> getList({required int id}) async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final lists = await db.query(
       listTable,
@@ -80,6 +91,7 @@ class ListsService {
   }
 
   Future<int> deleteAllLists() async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final numberofDeletions = await db.delete(listTable);
     myList = [];
@@ -88,6 +100,7 @@ class ListsService {
   }
 
   Future<void> deleteList({required int id}) async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final deleteCount = await db.delete(
       listTable,
@@ -103,6 +116,7 @@ class ListsService {
   }
 
   Future<DatabaseList> createLists({required DatabaseUser owner}) async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
     //confirming that owner exists in the db
@@ -129,6 +143,7 @@ class ListsService {
   }
 
   Future<DatabaseUser> getUser({required String email}) async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final results = await db.query(
       userTable,
@@ -144,6 +159,7 @@ class ListsService {
   }
 
   Future<DatabaseUser> createUser({required String email}) async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final results = await db.query(
       userTable,
@@ -166,6 +182,7 @@ class ListsService {
   }
 
   Future<void> deleteUser({required String email}) async {
+    await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final deleteCount = await db.delete(
       userTable,
@@ -186,6 +203,12 @@ class ListsService {
     }
   }
 
+  Future<void> ensureDbIsOpen() async {
+    try {
+      await openDb();
+    } on DatabaseAlreadyOpenException {}
+  }
+
   Future<void> openDb() async {
     if (_db != null) {
       throw DatabaseAlreadyOpenException();
@@ -196,10 +219,10 @@ class ListsService {
       final db = await openDatabase(dbPath);
       _db = db;
 
-      //creating user Table
+      //creating user Table with sqf code 
       await db.execute(createUserTable);
 
-      //create list table
+      //create list table with sqf code
       await db.execute(createListTable);
 
       await cacheNotes();

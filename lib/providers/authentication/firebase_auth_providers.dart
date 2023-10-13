@@ -7,7 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shopmate/firebase_options.dart';
 import 'package:shopmate/providers/authentication/auth_provider.dart';
 import 'package:shopmate/models/authentication/auth_user_model.dart';
-import 'package:shopmate/services/Authentication/auth_exceptions.dart';
+import 'package:shopmate/services/authentication/auth_exceptions.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   @override

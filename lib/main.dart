@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopmate/constants/routes.dart';
-import 'package:shopmate/services/Authentication/auth_service.dart';
+import 'package:shopmate/services/authentication/auth_service.dart';
 
 final router = createRouter();
 

@@ -7,7 +7,7 @@ import 'package:shopmate/pages/dashboard/list_page.dart';
 final router = GoRouter(
   routes: [
     GoRoute(
-      path: "/",
+      path: "/list_page",
       builder: (context, state) => WelcomePage(),
     ),
     GoRoute(
@@ -19,7 +19,7 @@ final router = GoRouter(
       builder: (context, state) => LoginPage(),
     ),
     GoRoute(
-      path: "/list_page",
+      path: "/",
       builder: (context, state) => ListPage(),
     ),
     

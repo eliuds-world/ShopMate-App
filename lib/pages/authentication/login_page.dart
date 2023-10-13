@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shopmate/services/Authentication/auth_exceptions.dart';
-import 'package:shopmate/services/Authentication/auth_service.dart';
+import 'package:shopmate/services/authentication/auth_exceptions.dart';
+import 'package:shopmate/services/authentication/auth_service.dart';
 import 'package:shopmate/widgets/textformfield_widget.dart';
 import 'package:shopmate/widgets/elevated_button_widget.dart';
-import 'package:shopmate/services/Authentication/show_error_snackbar.dart';
+import 'package:shopmate/services/authentication/show_error_snackbar.dart';
 
 class LoginPage extends StatefulWidget {
   // const LoginPage({Key? key}) : super(key: key);
