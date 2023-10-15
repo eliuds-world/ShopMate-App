@@ -9,11 +9,18 @@ class ListsService {
   Database? _db;
   List<DatabaseList> myList = [];
 
-  final listStreamController = StreamController<List<DatabaseList>>.broadcast();
+  late final StreamController<List<DatabaseList>> listStreamController;
 
   //this is  a private initialiser to this class coz we are making a singleton
   static final ListsService _shared = ListsService._sharedInstance();
-  ListsService._sharedInstance();
+  ListsService._sharedInstance() {
+
+    //populating lists in our streamcontroler
+    listStreamController =
+      StreamController<List<DatabaseList>>.broadcast(onListen: () {
+      listStreamController.sink.add(myList);
+    },);
+  }
   factory ListsService() => _shared;
 
   //this is our getter for getting allnotes
@@ -31,6 +38,7 @@ class ListsService {
     }
   }
 
+  //this function reads all available notes in my db and cache them in both the streamcontroller and mylist List variable
   Future<void> cacheNotes() async {
     final allLists = await getAllList();
     myList = allLists.toList();
@@ -41,7 +49,7 @@ class ListsService {
       {required DatabaseList list, required String text}) async {
     await ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
-    //make sure that the note actuallt exists
+    //make sure that the note actually exists
     await getList(id: list.id);
 
     //update database
@@ -219,7 +227,7 @@ class ListsService {
       final db = await openDatabase(dbPath);
       _db = db;
 
-      //creating user Table with sqf code 
+      //creating user Table with sqf code
       await db.execute(createUserTable);
 
       //create list table with sqf code
@@ -308,18 +316,19 @@ const emailColumn = "email";
 const userIdColumn = "user_id";
 const listTextColumn = "list_text";
 // const isSyncedWithFirebaseColumn = "is_synced_with_firebase";
-const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
-      "Id"	INTEGER NOT NULL,
-      "email"	TEXT NOT NULL UNIQUE,
-      PRIMARY KEY("Id" AUTOINCREMENT)
-      );
-      ''';
-const createListTable = '''CREATE TABLE  IF NOT EXISTS "lists" (
-        "id"	INTEGER NOT NULL,
-        "user_id"	INTEGER NOT NULL,
-        "list_text"	TEXT NOT NULL,
-        "is_synced_with_firebase"	INTEGER NOT NULL DEFAULT 0,
-        PRIMARY KEY("id"),
-        FOREIGN KEY("user_id") REFERENCES "user"("Id")
-      );
-      ''';
+const createUserTable = '''CREATE TABLE IF NOT EXISTS user (
+  Id INTEGER NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  PRIMARY KEY(Id AUTOINCREMENT)
+);
+''';
+
+const createListTable = '''CREATE TABLE IF NOT EXISTS lists (
+  id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  list_text TEXT NOT NULL,
+  is_synced_with_firebase INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY(id),
+  FOREIGN KEY(user_id) REFERENCES user(Id)
+);
+''';
