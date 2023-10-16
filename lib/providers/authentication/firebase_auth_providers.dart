@@ -1,8 +1,5 @@
-
 import 'dart:ffi';
-
-import 'package:firebase_auth/firebase_auth.dart'
-    show FirebaseAuth, FirebaseAuthException;
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, FirebaseAuthException;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shopmate/firebase_options.dart';
 import 'package:shopmate/providers/authentication/auth_provider.dart';

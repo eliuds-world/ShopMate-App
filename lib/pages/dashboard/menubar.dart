@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopmate/services/authentication/auth_service.dart';
-// import 'package:shopmate/services/crud_lists.dart';
 
 class NavBarWidget extends StatelessWidget {
-  const NavBarWidget({super.key});
+  Future<void> logOut() async {
+    await AuthService.firebase().logOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class NavBarWidget extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back),
           ),
@@ -54,7 +55,7 @@ class NavBarWidget extends StatelessWidget {
           ListTile(
             title: TextButton(
               onPressed: () {
-                loggingOut();
+                logOut();
                 context.go("/login_page");
               },
               child: Text(
@@ -69,8 +70,4 @@ class NavBarWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<void> loggingOut() async {
-  await AuthService.firebase().logOut();
 }

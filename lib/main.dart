@@ -6,7 +6,6 @@ final router = createRouter();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await AuthService.firebase().initialize();
   runApp(const ShopMate());
 }

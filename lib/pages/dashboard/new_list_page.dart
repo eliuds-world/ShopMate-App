@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopmate/services/authentication/auth_service.dart';
 import 'package:shopmate/services/crud_services.dart';
-// import 'package:shopmate/widgets/elevated_button_widget.dart';
 
 class NewListPage extends StatefulWidget {
-  const NewListPage({Key? key}) : super(key: key);
-
   @override
   State<NewListPage> createState() => _NewListPageState();
 }
@@ -24,14 +21,13 @@ class _NewListPageState extends State<NewListPage> {
     }
     final currentUser = AuthService.firebase().currentUser;
     if (currentUser == null) {
-      // Handle the case where the user is not authenticated
       throw Exception("User not authenticated");
     }
     final email = currentUser.email;
     if (email == null) {
-      // Handle the case where the user's email is not available
       throw Exception("User email not available");
     }
+
     final owner = await myListsService.getUser(email: email);
 
     return await myListsService.createLists(owner: owner);
@@ -106,15 +102,16 @@ class _NewListPageState extends State<NewListPage> {
                 title: Text(
                   "Create New Item",
                   style: TextStyle(
-                    color: Colors.black, // Text color
+                    color: Colors.black, 
                   ),
                 ),
-                backgroundColor:
-                    Colors.transparent, // Remove the background color
-                elevation: 0, // Remove the elevation
+                backgroundColor: Colors.transparent, 
+                elevation: 0,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back,
-                      color: Colors.black), // Back arrow color
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
+                  ),
                   onPressed: () {
                     context.go("/list_page");
                   },
@@ -123,21 +120,18 @@ class _NewListPageState extends State<NewListPage> {
               body: Column(
                 children: [
                   TextField(
-                    controller: titleController, // Add controller here
+                    controller: titleController, 
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     decoration: InputDecoration(
                       hintText: "list",
                     ),
-                    onChanged: (value) {
-                      // newDescriptionList = value;
-                    },
+                    onChanged: (value) {},
                   ),
                 ],
               ),
             );
-          default:
-            return CircularProgressIndicator();
+          default: return CircularProgressIndicator();
         }
       },
     );
